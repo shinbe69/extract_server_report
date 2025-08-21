@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Form Nhập</title>
+    <style>
+        /* Thiết lập chung cho trang */
+        
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("hero-bg.jpg");
+            /* Đường dẫn ảnh */
+            background-size: cover;
+            /* Ảnh bao phủ toàn bộ màn hình */
+            background-position: center;
+            /* Ảnh căn giữa */
+            background-repeat: no-repeat;
+            /* Không lặp lại */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Container chính chứa form và logo */
+        
+        .container {
+            position: relative;
+            /* Để logo hiển thị ở vị trí tuyệt đối */
+            width: 100%;
+            height: 100%;
+        }
+        /* Form nhập liệu */
+        
+        form {
+            width: 30%;
+            padding: 2em;
+            background-color: rgba(255, 255, 255, 0.9);
+            /* Nền trắng có độ trong suốt */
+            border-radius: 15px;
+            /* Bo góc */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* Đổ bóng */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-group {
+            display: flex;
+            margin-bottom: 0.8em;
+        }
+        /* Tiêu đề */
+        
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            color: #333333;
+            margin-bottom: 1em;
+        }
+        /* Các nhãn */
+        
+        label {
+            font-size: 1em;
+            font-weight: bold;
+            color: #555555;
+        }
+        /* Ô nhập liệu */
+        
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 0.8em;
+            font-size: 1em;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            margin-bottom: 1em;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            font-size: 1.2em;
+            resize: vertical;
+            /* Cho phép thay đổi chiều cao */
+            min-height: 100px;
+            /* Chiều cao tối thiểu */
+        }
+        /* Nút gửi */
+        
+        input[type="submit"] {
+            width: fit-content;
+            padding: 0.8em 2em;
+            margin: auto;
+            font-size: 1em;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        /* Ô logo */
+        /* Container logo và danh sách */
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            text-align: center;
+            padding: 20px;
+            /* Thêm khoảng trống bên trong khung */
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            /* Kẻ khung với màu đen nhạt */
+            border-radius: 15px;
+            /* Bo tròn khung */
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Nền trắng mờ */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Đổ bóng nhẹ */
+        }
+        /* Logo */
+        
+        .logo-container img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        label {
+            margin: auto 0;
+        }
+        /* Danh sách */
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .logo-container img {
+                width: 100px;
+            }
+            .logo-container ul li {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Ô logo và danh sách -->
+        <div class="logo-container">
+            <img src="Logopts.png" alt="Logo">
+            <h4>Danh sách các chỉ định đã thêm</h4>
+            <ol id="orderedList"></ol>
+        </div>
+
+        <!-- Form nhập -->
+        <form id="sendDataForm">
+            <h1>Nhập thông tin tình huống</h1>
+
+            <h3>1. Chỉ định cụ thể:</h3>
+            <textarea id="situation" name="situation" placeholder="Nhập chỉ định cụ thể..."></textarea>
+
+            <h3>2. Chọn câu trả lời đúng cho tình huống</h3>
+            <div class="radio-group">
+                <input type="radio" id="answer_yes" name="correct_answer" value="yes">
+                <label for="answer_yes">Vệ sinh tay</label>
+            </div>
+
+            <div class="radio-group">
+                <input type="radio" id="answer_no" name="correct_answer" value="no">
+                <label for="answer_no">Không vệ sinh tay</label>
+            </div>
+
+            <div class="radio-group">
+                <input type="radio" id="answer_unnecessary" name="correct_answer" value="unnecessary">
+                <label for="answer_unnecessary">Không cần thiết vệ sinh tay</label>
+            </div>
+
+            <div id="submitWrapper">
+                <input type="submit" value="OK">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    $(document).ready(() => {
+      console.log('Script ready...')
+      fetch('http://mrns.bvhungvuong.vn:3002/list')
+      .then(res => res.json())
+      .then(res => {
+        res.forEach(singleData => {
+          $("ol").append(`<li><b>${singleData.content}</b></li>`)
+        })
+      })
+      .catch((err) => console.log('Error:', err))
+    document.getElementById('sendDataForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    if (event.target.situation.value === '' || event.target.correct_answer.value === '') alert('Vui lòng nhập đầy đủ thông tin!')
+    else {
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries()); // Convert FormData to an object
+        try {
+            const response = await fetch('http://mrns.bvhungvuong.vn:3002/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            });
+    
+            if (response.ok) {
+            let result = await response.json();
+            document.getElementById('situation').value = ''
+            $('input[type=radio]').prop('checked',false);
+            $("ol").append(`<li><b>${result.content}</b></li>`)
+            } else {
+            console.error('Error:', response.statusText);
+            alert('Something went wrong 😢');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Could not connect to the API 🚨');
+        }
+    }
+    });
+})
+    
+</script>
