@@ -7,141 +7,203 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <title>Nhập thông tin</title>
         <style>
-            body {
-                height: 100vh;
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                font-size: large;
-                font-family: "Roboto", sans-serif;
-            }
-            form {
-                width: 70%;
-                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-                border-radius: 0.4em;
-                padding: 1em;
-            }
-            .inputWrapper {
-              margin: 1em;
-              display: flex;
-              
-            }
-            h1 {
-                text-align: center;
-                margin: 1em 0;
-            }
-            h3 {
-              text-decoration-line: underline;
-              text-decoration-thickness: 1.5px;
-            }
-            input[type=submit] {
-                width: 6em;
-                height: 2em;
-                margin: 2em auto 0 auto;
-                font-size: large;
-            }
-            input[type=text] {
-                width: 95%;
-                padding: 0.2em;
-                font-style: italic;
-                font-size: large;
-                border: none;
-                outline: none;
-            }
-            #submitWrapper {
-              width: 100%;
-              display: flex;
-            }
-            #file-viewer {
-              width: 30%;
-              padding: 1em 0.5em;
-              overflow: hidden;
-            }
-            #file-viewer h3 {
-              text-align: center;
-            }
-            hr {
-              height: 80%;
+          body {
+              height: 100vh;
+              box-sizing: border-box;
+              margin: 0;
               padding: 0;
-              margin: auto 0;
-            }
-            #formContent {
               display: flex;
-              width: 100%;
-            }
-            #reportInfo {
-              width: 50%;
-            }
-            #deviceInfo {
-              width: 50%;
-            }
-            table {}
-            td, th {
-              border: 1px solid #dddddd;
-              text-align: left;
-              
-            }
+              font-size: large;
+              font-family: "Roboto", sans-serif;
+          }
+          form {
+              width: 70%;
+              box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+              border-radius: 0.4em;
+              overflow: auto;
+              padding: 1em;
+          }
+          .inputWrapper {
+            margin: 1em;
+            display: flex;
+            
+          }
+          h1 {
+            text-align: center;
+            margin: 1em 0;
+          }
+          h3 {
+            text-decoration-line: underline;
+            text-decoration-thickness: 1.5px;
+          }
+          input[type=submit] {
+            width: 6em;
+            height: 2em;
+            margin: 2em auto 0 auto;
+            font-size: large;
+          }
+          input[type=text] {
+            width: 95%;
+            padding: 0.2em;
+            font-style: italic;
+            font-size: large;
+            border: none;
+            outline: none;
+          }
+          #reportFile {
+            width: fit-content;
+          }
+          #submitWrapper {
+            width: 100%;
+            display: flex;
+          }
+          #file-viewer {
+            width: 30%;
+            padding: 1em 0.5em;
+            overflow: hidden;
+          }
+          #file-viewer h3 {
+            text-align: center;
+          }
+          hr {
+            height: 80%;
+            padding: 0;
+            margin: auto 0;
+          }
+          #formContent {
+            width: 100%;
+            display: flex;
+          }
+          #serverInfo {
+            width: 50%;
+          }
+          #reportInfo {
+            width: 100%;
+          }
+          #deviceInfo {
+            width: 100%;
+          }
+          #networkUsage {
+            width: 50%;
+          }
+          td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 0.2em;
+          }
+          #importFileSection {
+            width: fit-content;
+            display: flex;
+          }
+          #loaderWrapper {
+            margin-left: 1em;
+            display: flex;
+            visibility: hidden;
+          }
+            /* loader cssf*/
+          /* HTML: <div class="loader"></div> */
+          .loader {
+            width: 20px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid gray;
+            animation:
+              l20-1 0.8s infinite linear alternate,
+              l20-2 1.6s infinite linear;
+            margin: auto 0 auto 0.5em;
+          }
+          @keyframes l20-1{
+            0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
+            12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
+            25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
+            50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+            62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+            75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
+            100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+          }
+          @keyframes l20-2{ 
+            0%    {transform:scaleY(1)  rotate(0deg)}
+            49.99%{transform:scaleY(1)  rotate(135deg)}
+            50%   {transform:scaleY(-1) rotate(0deg)}
+            100%  {transform:scaleY(-1) rotate(-135deg)}
+          }
         </style>
     </head>
 <body>
 
 <div id="file-viewer">
   <h3>File report preview</h3>
-  <iframe src="../exec_daily_2025-06-24.pdf" width="100%" height="100%"></iframe>
+  <iframe width="100%" height="100%" id="reportPreview"></iframe>
 </div>
 <hr>
 <form id="sendDataForm">
   <h1>Cập nhật thông tin báo cáo hoạt động máy chủ</h1>
-  <div id="formContent">
-    <div id="reportInfo">
-      <h3>Report info</h3>
-      <table>
-        <tr>
-          <td>Date:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Type:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-      </table>
+  <!-- import file -->
+  <div id="importFileSection">
+    <label for="myfile">Import file báo cáo:</label>
+    <input type="file" id="reportFile" name="reportFile" accept=".pdf">
+    <div id="loaderWrapper">
+      Đang trích xuất <div class="loader"></div>
     </div>
-    <div id="deviceInfo">
-      <h3>Device info</h3>
-      <table>
-        <tr>
-          <td>Organization:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Country:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>City:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Serial:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>License ID:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Hostname:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Firmware version:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
-        <tr>
-          <td>Uptime:</td>
-          <td><input type="text" id="organization" name="organization" ></td>
-        </tr>
+  </div>
+  <div id="formContent">
+    <div id="serverInfo">
+      <div id="reportInfo">
+        <h3>Report info</h3>
+        <table>
+          <tr>
+            <td>Date:</td>
+            <td><input type="text" id="date" name="date" ></td>
+          </tr>
+          <tr>
+            <td>Type:</td>
+            <td><input type="text" id="type" name="type" ></td>
+          </tr>
+        </table>
+      </div>
+      <div id="deviceInfo">
+        <h3>Device info</h3>
+        <table id="deviceInfoTable">
+          <tr>
+            <td>Organization:</td>
+            <td><input type="text" id="organization" name="organization" ></td>
+          </tr>
+          <tr>
+            <td>Country:</td>
+            <td><input type="text" id="country" name="country" ></td>
+          </tr>
+          <tr>
+            <td>City:</td>
+            <td><input type="text" id="city" name="city" ></td>
+          </tr>
+          <tr>
+            <td>Serial:</td>
+            <td><input type="text" id="serial" name="serial" ></td>
+          </tr>
+          <tr>
+            <td>License ID:</td>
+            <td><input type="text" id="license_id" name="license_id" ></td>
+          </tr>
+          <tr>
+            <td>Hostname:</td>
+            <td><input type="text" id="hostname" name="hostname" ></td>
+          </tr>
+          <tr>
+            <td>Firmware version:</td>
+            <td><input type="text" id="firmware_version" name="firmware_version" ></td>
+          </tr>
+          <tr>
+            <td>Uptime:</td>
+            <td><input type="text" id="uptime" name="uptime" ></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!-- network usage -->
+     <div id="networkUsage">
+      <h3>Network Usage</h3>
+      <table id="networkUsageTable">
+        
       </table>
     </div>
   </div>
@@ -156,14 +218,58 @@
 <script>
   $(document).ready(() => {
     console.log('Script ready...')
-    fetch('http://mrns.bvhungvuong.vn:3002/list')
-    .then(res => res.json())
-    .then(res => {
-      res.forEach(singleData => {
-        $("ol").append(`<li><b>${singleData.content}</b></li>`)
-      })
+    const keyList = ['Date', 'Type', 'Organization', 'Country', 'City', 'Serial', 'License ID', 'Hostname', 'Firmware Version', 'Uptime', 'Device']
+    const networkUsageKeyList = ['TOP10 Clients',
+      'TOP10 Servers',
+      'TOP10 Services',
+      'TOP10 Applications',
+      'TOP10 Application Categories',
+      'TOP10 dropped source hosts',
+      'TOP10 dropped destination hosts',
+      'TOP10 dropped services',
+      'TOP10 ATP Contaminated',
+      'TOP10 ATP Recent Events',
+      'TOP10 Users by time',
+      'TOP10 Users by traffic',
+      'TOP10 Domains bytime',
+      'TOP10 Domains by size',
+      'TOP10 VPN Clients by duration']
+
+    const networkUsageTable = document.getElementById('networkUsageTable')
+    networkUsageKeyList.forEach(key => {
+      const row = networkUsageTable.insertRow()
+      row.innerHTML = `<tr><td>${key}:</td><td><input type='text' id='${key.toLowerCase().replaceAll(' ', '_')}' name='${key.toLowerCase().replaceAll(' ', '_')}' ></td></tr>`
     })
-    .catch((err) => console.log('Error:', err))
+    //handle upload file
+    const inputElement = document.getElementById("reportFile");
+    inputElement.addEventListener("change", handleFiles, false);
+    function handleFiles() {
+      document.getElementById('loaderWrapper').style.visibility = 'visible'
+      //preview
+      const file = this.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('reportPreview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      //send to server
+      const formData = new FormData();
+      formData.append("reportFile", file);
+      formData.append('keyList', JSON.stringify(keyList))
+      fetch('http://10.17.34.148:3003/upload-report', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        Object.keys(res).forEach(key => {
+          document.getElementById(`${key.toLowerCase().replaceAll(' ', '_')}`).value = res[key]
+        });
+        document.getElementById('loaderWrapper').style.visibility = 'hidden'
+      })
+      .catch((err) => console.log('Error:', err))
+    }
     document.getElementById('sendDataForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent the default form submission
       if (event.target.situation.value === '' || event.target.correct_answer.value === '') alert('Vui lòng nhập đầy đủ thông tin!')
