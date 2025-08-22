@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <title>Nhập thông tin</title>
         <style>
@@ -10,42 +13,52 @@
                 margin: 0;
                 padding: 0;
                 display: flex;
+                font-size: large;
+                font-family: "Roboto", sans-serif;
             }
             form {
-                width: 40%;
-                margin: auto;
+                width: 70%;
                 box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
                 border-radius: 0.4em;
-                padding: 2em;
+                padding: 1em;
             }
-            label {
-                margin: auto;
+            .inputWrapper {
+              margin: 1em;
+              display: flex;
+              
             }
             h1 {
                 text-align: center;
                 margin: 1em 0;
             }
+            h3 {
+              text-decoration-line: underline;
+              text-decoration-thickness: 1.5px;
+            }
             input[type=submit] {
                 width: 6em;
                 height: 2em;
-                margin: auto;
+                margin: 2em auto 0 auto;
+                font-size: large;
+            }
+            input[type=text] {
+                width: 95%;
+                padding: 0.2em;
+                font-style: italic;
+                font-size: large;
+                border: none;
+                outline: none;
             }
             #submitWrapper {
-                width: 100%;
-                display: flex;
+              width: 100%;
+              display: flex;
             }
-            textarea {
-                font-size: 1.3em;
-                resize: vertical;
-                min-height: 8em;
-                width: 85%;
-            }
-            #listWrapper {
-              width: 20%;
+            #file-viewer {
+              width: 30%;
               padding: 1em 0.5em;
-              overflow: auto;
+              overflow: hidden;
             }
-            #listWrapper h3 {
+            #file-viewer h3 {
               text-align: center;
             }
             hr {
@@ -53,33 +66,87 @@
               padding: 0;
               margin: auto 0;
             }
+            #formContent {
+              display: flex;
+              width: 100%;
+            }
+            #reportInfo {
+              width: 50%;
+            }
+            #deviceInfo {
+              width: 50%;
+            }
+            table {}
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              
+            }
         </style>
     </head>
 <body>
 
-<div id="listWrapper">
-  <h3>Danh sách các chỉ định đã thêm</h3>
-  <ol id="orderedList"></ol>
+<div id="file-viewer">
+  <h3>File report preview</h3>
+  <iframe src="../exec_daily_2025-06-24.pdf" width="100%" height="100%"></iframe>
 </div>
 <hr>
 <form id="sendDataForm">
-    <h1>Nhập thông tin tình huống</h1>
-  <h3>1. Tình huống cụ thể:</h3>
-  <textarea id="situation" name="situation" placeholder="Nhập chỉ định cụ thể..."></textarea>
-    <br>
-  <h3>2. Chọn câu trả lời đúng cho tình huống</h3>
-  <input type="radio" id="html" name="correct_answer" value="yes">
-  <label for="html">Vệ sinh tay</label><br>
-    <br>
-  <input type="radio" id="css" name="correct_answer" value="no">
-  <label for="css">Không vệ sinh tay</label><br>
-    <br>
-  <input type="radio" id="javascript" name="correct_answer" value="unnecessary">
-  <label for="javascript">Không cần thiết vệ sinh tay</label>
-    <br>
-    <br>
+  <h1>Cập nhật thông tin báo cáo hoạt động máy chủ</h1>
+  <div id="formContent">
+    <div id="reportInfo">
+      <h3>Report info</h3>
+      <table>
+        <tr>
+          <td>Date:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Type:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+      </table>
+    </div>
+    <div id="deviceInfo">
+      <h3>Device info</h3>
+      <table>
+        <tr>
+          <td>Organization:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Country:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>City:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Serial:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>License ID:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Hostname:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Firmware version:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+        <tr>
+          <td>Uptime:</td>
+          <td><input type="text" id="organization" name="organization" ></td>
+        </tr>
+      </table>
+    </div>
+  </div>
   <div id="submitWrapper">
-    <input type="submit" value="OK">
+    <input type="submit" value="Lưu">
   </div>
 </form>
 

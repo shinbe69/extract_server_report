@@ -35,6 +35,6 @@ app.listen(3003, '0.0.0.0', () => {
     res.sendStatus(200)
   })
   app.get('/update', (req, res) => {
-    res.sendFile(path.join(__dirname, '/views/formnhap.html'))
+    res.sendFile(path.join(__dirname, '/views/dataCollector.html'))
   })
 })
