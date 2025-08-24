@@ -4,6 +4,7 @@ const Tesseract = require('tesseract.js');
 const { fromPath } = require("pdf2pic"); // convert pdf page to image
 const path = require('path')
 const multer = require('multer')
+const sharp = require('sharp')
 
 // Configure storage for uploaded files
 const storage = multer.diskStorage({
@@ -26,8 +27,8 @@ router.get('/update', (req, res) => {
 })
 
 router.post('/upload-report', upload.single('reportFile'), (req, res) => {
+    const networkUsageKeyList = JSON.parse(req.body.networkUsageKeyList)
     const keyList = JSON.parse(req.body.keyList)
-    console.log('Key list:', keyList)
     const prepareData = {}
     const options = {
         density: 200,
@@ -41,10 +42,18 @@ router.post('/upload-report', upload.single('reportFile'), (req, res) => {
     convert.bulk(-1)
     .then(async (output) => {
         for await (const singlePage of output) {
-            const result = await Tesseract.recognize(singlePage.path, "eng");
+            await sharp(singlePage.name)
+            .resize({ width: 2000 }) 
+            .grayscale()
+            .threshold(150) // tweak threshold value
+            .toFile('processed'.concat(singlePage.name));
+            const result = await Tesseract.recognize('processed'.concat(singlePage.name), "eng", {
+                tessedit_pageseg_mode: 3,
+                tessedit_ocr_engine_mode: 1,
+            });
             const contentArr = result.data.text.split('\n')
-            contentArr.forEach(singleline => {
-                console.log('Line:', singleline)
+            contentArr.forEach((singleline, index) => {
+                
                 for (let n = 0; n < keyList.length; n++) {
                     if (prepareData[`${keyList[n]}`] === undefined) {
                         const singlelineArr = singleline.split(keyList[n])
@@ -56,7 +65,22 @@ router.post('/upload-report', upload.single('reportFile'), (req, res) => {
                                 if (keyList.includes(rawValueArr[m])) break
                                 else prepareValue.push(rawValueArr[m])
                             }
-                            prepareData[`${keyList[n]}`] = prepareValue.join(' ')
+                            prepareData[`${keyList[n]}`] = prepareValue.join(' ').toString().trim()
+                        }
+                    }
+                }
+                //add networkUsage value
+                for (let k = 0; k < networkUsageKeyList.length; k++) {
+                    if (prepareData[`${networkUsageKeyList[k]}`] === undefined) {
+                        if (singleline.toLowerCase().includes(networkUsageKeyList[k].toLowerCase())) {
+                            for (j = index + 1; j < index + 5; j++) {
+                                if (contentArr[j].trim() != '') {
+                                    if (contentArr[j].toLowerCase().includes('total') && !networkUsageKeyList.some(item => contentArr[j].toLowerCase().includes(item.toLowerCase()))) {
+                                        console.log(networkUsageKeyList[k], contentArr[j])
+                                        prepareData[`${networkUsageKeyList[k]}`] = (prepareData[`${networkUsageKeyList[k]}`] ? prepareData[`${networkUsageKeyList[k]}`] : '') + ' ' + contentArr[j]
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -69,6 +93,10 @@ router.post('/upload-report', upload.single('reportFile'), (req, res) => {
         console.error("Conversion error:", err);
         res.sendStatus(500)
     });
+})
+
+router.post('/save-info', async (req, res) => {
+    console.log('data:', req.body)
 })
 
 module.exports = router

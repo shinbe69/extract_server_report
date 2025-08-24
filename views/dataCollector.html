@@ -8,20 +8,40 @@
         <title>Nhập thông tin</title>
         <style>
           body {
-              height: 100vh;
-              box-sizing: border-box;
-              margin: 0;
-              padding: 0;
-              display: flex;
-              font-size: large;
-              font-family: "Roboto", sans-serif;
+            height: 100vh;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            font-size: large;
+            font-family: "Roboto", sans-serif;
+            position: relative;
+          }
+          #pageHeader {
+            position: absolute;
+            top: 0.5em;
+            left: 1em;
+            width: fit-content;
+            font-size: 1rem;
+            padding: 0.5em;
+            color: #1877F2;
+            display: flex;
+          }
+          #pageHeader img {
+              width: 4rem;
+              margin-right: 0.5rem;
+          }
+          #logoLink {
+            font-size: 1.5rem;
+            color: #1877F2;
+            margin: auto;
+            font-weight: bold;
           }
           form {
-              width: 70%;
-              box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-              border-radius: 0.4em;
-              overflow: auto;
-              padding: 1em;
+            width: 70%;
+            margin: auto;
+            overflow: auto;
+            padding: 1em;
           }
           .inputWrapper {
             margin: 1em;
@@ -43,6 +63,7 @@
             font-size: large;
           }
           input[type=text] {
+            overflow: scroll;
             width: 95%;
             padding: 0.2em;
             font-style: italic;
@@ -58,8 +79,8 @@
             display: flex;
           }
           #file-viewer {
-            width: 30%;
-            padding: 1em 0.5em;
+            margin-top: 4em;
+            width: 0%;
             overflow: hidden;
           }
           #file-viewer h3 {
@@ -85,6 +106,9 @@
           }
           #networkUsage {
             width: 50%;
+          }
+          #networkUsageTable {
+            width: 100%;
           }
           td, th {
             border: 1px solid #dddddd;
@@ -130,12 +154,16 @@
         </style>
     </head>
 <body>
-
+<div id="pageHeader">
+  <a href="https://nhansu.bvhungvuong.vn">
+      <img src="https://morongnhansu.bvhungvuong.vn/logobv.png" alt="logo"/>
+  </a>
+  <a href="https://nhansu.bvhungvuong.vn" id="logoLink">Bệnh viện Hùng Vương</a>
+</div>
 <div id="file-viewer">
   <h3>File report preview</h3>
   <iframe width="100%" height="100%" id="reportPreview"></iframe>
 </div>
-<hr>
 <form id="sendDataForm">
   <h1>Cập nhật thông tin báo cáo hoạt động máy chủ</h1>
   <!-- import file -->
@@ -208,7 +236,7 @@
     </div>
   </div>
   <div id="submitWrapper">
-    <input type="submit" value="Lưu">
+    <input id="saveInfo" type="submit" value="Lưu">
   </div>
 </form>
 
@@ -245,6 +273,9 @@
     inputElement.addEventListener("change", handleFiles, false);
     function handleFiles() {
       document.getElementById('loaderWrapper').style.visibility = 'visible'
+      document.getElementById('file-viewer').style.width = '30%'
+      document.getElementById('sendDataForm').style.width = '70%'
+      document.getElementById('saveInfo').disabled = true
       //preview
       const file = this.files[0];
       const reader = new FileReader();
@@ -256,49 +287,46 @@
       const formData = new FormData();
       formData.append("reportFile", file);
       formData.append('keyList', JSON.stringify(keyList))
-      fetch('http://10.17.34.148:3003/upload-report', {
+      formData.append('networkUsageKeyList', JSON.stringify(networkUsageKeyList))
+      fetch('http://localhost:3003/upload-report', {
         method: 'POST',
         body: formData
       })
       .then(res => res.json())
       .then(res => {
-        console.log(res)
         Object.keys(res).forEach(key => {
           document.getElementById(`${key.toLowerCase().replaceAll(' ', '_')}`).value = res[key]
         });
         document.getElementById('loaderWrapper').style.visibility = 'hidden'
+        document.getElementById('saveInfo').disabled = false
       })
       .catch((err) => console.log('Error:', err))
     }
     document.getElementById('sendDataForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent the default form submission
-      if (event.target.situation.value === '' || event.target.correct_answer.value === '') alert('Vui lòng nhập đầy đủ thông tin!')
-      else {
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries()); // Convert FormData to an object
-        try {
-            const response = await fetch('http://mrns.bvhungvuong.vn:3002/data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-            });
-    
-            if (response.ok) {
-              let result = await response.json();
-              document.getElementById('situation').value = ''
-              $('input[type=radio]').prop('checked',false);
-              $("ol").append(`<li><b>${result.content}</b></li>`)
-            } else {
-            console.error('Error:', response.statusText);
-            alert('Something went wrong 😢');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Could not connect to the API 🚨');
-        }
-    }
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries()); // Convert FormData to an object
+      try {
+          const response = await fetch('http://localhost:3003/save-info', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          });
+          if (response.ok) {
+            let result = await response.json();
+            document.getElementById('situation').value = ''
+            $('input[type=radio]').prop('checked',false);
+            $("ol").append(`<li><b>${result.content}</b></li>`)
+          } else {
+          console.error('Error:', response.statusText);
+          alert('Something went wrong 😢');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+          alert('Could not connect to the API 🚨');
+      }
     });
   })
     
